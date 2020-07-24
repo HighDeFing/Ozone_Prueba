@@ -2,7 +2,9 @@ from flask import Flask, escape, request, redirect, render_template, flash, url_
 from werkzeug.utils import secure_filename
 import sys
 import os
+from os.path import dirname
 from pygltflib import GLTF2
+from converter import gtlf2glb_call
 
 UPLOAD_FOLDER = 'upload_archives'
 ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}
@@ -22,11 +24,22 @@ def hello():
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['file']
-        file_name = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-        convert_gltf_to_glb(file_name)
+        files = request.files.getlist('file')
+        print(files, file=sys.stderr)
+        # f = request.files['file']
+        # file_name = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
+        # f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+        # convert_gltf_to_glb(file_name)
         return 'file uploaded successfully'
+
+
+# def upload_files():
+#     if request.method == 'POST':
+#         f = request.files['file']
+#         file_name = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
+#         f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+#         convert_gltf_to_glb(file_name)
+#         return 'file uploaded successfully'
 
 
 def allowed_file(filename):
@@ -35,9 +48,7 @@ def allowed_file(filename):
 
 
 def convert_gltf_to_glb(f):
-    gltf = GLTF2().load(f)
-    print(f, file=sys.stderr)
-    gltf.save(os.path.join(CONVERTED_FOLDER, "test.glb"))
+    gtlf2glb_call(f, os.path.join(CONVERTED_FOLDER, f))
 
 
 if __name__ == "__main__":
