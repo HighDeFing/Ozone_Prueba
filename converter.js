@@ -1,3 +1,7 @@
+/*
+npm install obj2gltf
+*/
+
 const obj2gltf = require('obj2gltf');
 const fs = require('fs');
 const options = {
