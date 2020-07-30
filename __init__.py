@@ -6,7 +6,7 @@ import shutil
 import ntpath
 from os import walk
 from pygltflib import GLTF2
-from converter import gtlf2glb_call
+from converter import gtlf2glb_call, obj2glb_call
 
 
 UPLOAD_FOLDER = 'upload_archives'
@@ -33,9 +33,10 @@ def upload_file():
     """
     if request.method == 'POST':
         files = request.files.getlist('file')
-        #print(files, file=sys.stderr)
+        type = request.form.get('category') #get the file type
+        #print(category, file=sys.stderr)
         user = USER
-        create_folder(files, user, 'gltf')
+        create_folder(files, user, type)
         # f = request.files['file']
         # file_name = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
         # f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
@@ -61,18 +62,25 @@ def create_folder(files, user, type):
         #print("converted_path", file_name, file=sys.stderr)
         file_path = os.path.join(path, file_name)
         if file_name.endswith('.gltf'):
-            gltf_file_path = file_path
-            gltf_file_name = os.path.splitext(file_name)[0]
+            source_file_path = file_path
+            source_file_name = os.path.splitext(file_name)[0]
+        if file_name.endswith('.obj'):
+            source_file_path = file_path
+            source_file_name = os.path.splitext(file_name)[0]
         f.save(file_path)
+    converted_path = os.path.join(CONVERTED_FOLDER, user)  # Path of the converted folder and the user for that folder
+    # print("converted_path", converted_path, file=sys.stderr)
+    # print("gltf_file_path", gltf_file_path, file=sys.stderr)
+    if os.path.exists(converted_path):  # creates a folder with user_id and replaces if it already exist
+        shutil.rmtree(converted_path)
+    os.makedirs(converted_path)
     if type == 'gltf':
-        converted_path = os.path.join(CONVERTED_FOLDER, user) #Path of the converted folder and the user for that folder
-        #print("converted_path", converted_path, file=sys.stderr)
-        #print("gltf_file_path", gltf_file_path, file=sys.stderr)
-        if os.path.exists(converted_path):  # creates a folder with user_id and replaces if it already exist
-            shutil.rmtree(converted_path)
-        os.makedirs(converted_path)
-        destination_path = converted_path + '/' + gltf_file_name + '.glb' #Name of the new glb file
-        gtlf2glb_call(gltf_file_path, destination_path) #call to the converter
+        destination_path = converted_path + '/' + source_file_name + '.glb' #Name of the new glb file
+        gtlf2glb_call(source_file_path, destination_path) #call to the converter
+    if type == 'obj':
+        destination_path = converted_path + '/' + source_file_name + '.glb'  # Name of the new glb file
+        obj2glb_call(source_file_path, destination_path)  # call to the converter
+
 
 
 def path_leaf(path):
