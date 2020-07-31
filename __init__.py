@@ -1,22 +1,19 @@
 from flask import Flask, escape, request, redirect, render_template, flash, url_for
 from werkzeug.utils import secure_filename
-import sys
 import os
 import shutil
 import ntpath
-from os import walk
-from pygltflib import GLTF2
 from converter import gtlf2glb_call, obj2glb_call
 
 
-UPLOAD_FOLDER = 'upload_archives'
-ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}
-CONVERTED_FOLDER = 'converted_files'
-USER = 'generic_user'
+UPLOAD_FOLDER = 'upload_archives'  #folder of the uploads
+ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}  #allowed_extensions still not aplicable
+CONVERTED_FOLDER = 'converted_files'  #folder of the converted files
+USER = 'generic_user' #user attribute and the name of the folder
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #when you do f.save this is where it ends.
 
 
 @app.route('/')
@@ -32,15 +29,11 @@ def upload_file():
     :return: nothing
     """
     if request.method == 'POST':
-        files = request.files.getlist('file')
-        type = request.form.get('category') #get the file type
+        files = request.files.getlist('file') #get the files in a File object
+        type = request.form.get('category') #get the file type from the html
         #print(category, file=sys.stderr)
         user = USER
-        create_folder(files, user, type)
-        # f = request.files['file']
-        # file_name = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
-        # f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-        # convert_gltf_to_glb(file_name)
+        create_folder(files, user, type) #call the function to create the folder with the user name
         return 'file uploaded successfully'
 
 
@@ -63,14 +56,12 @@ def create_folder(files, user, type):
         file_path = os.path.join(path, file_name)
         if file_name.endswith('.gltf'):
             source_file_path = file_path
-            source_file_name = os.path.splitext(file_name)[0]
+            source_file_name = os.path.splitext(file_name)[0] #split text gets us the name without the extension
         if file_name.endswith('.obj'):
             source_file_path = file_path
-            source_file_name = os.path.splitext(file_name)[0]
-        f.save(file_path)
+            source_file_name = os.path.splitext(file_name)[0] #split text gets us the name without the extension
+        f.save(file_path) #this saves the original file in the upload_files folder.
     converted_path = os.path.join(CONVERTED_FOLDER, user)  # Path of the converted folder and the user for that folder
-    # print("converted_path", converted_path, file=sys.stderr)
-    # print("gltf_file_path", gltf_file_path, file=sys.stderr)
     if os.path.exists(converted_path):  # creates a folder with user_id and replaces if it already exist
         shutil.rmtree(converted_path)
     os.makedirs(converted_path)
@@ -90,14 +81,6 @@ def path_leaf(path):
     """
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
-
-# def upload_files():
-#     if request.method == 'POST':
-#         f = request.files['file']
-#         file_name = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
-#         f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-#         convert_gltf_to_glb(file_name)
-#         return 'file uploaded successfully'
 
 
 def allowed_file(filename):
