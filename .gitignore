@@ -7,7 +7,7 @@ yarn.lock
 converted_files
 upload_files
 __pycache__
-test_files
+/test_files
 
 # User-specific stuff
 .idea/**/workspace.xml
