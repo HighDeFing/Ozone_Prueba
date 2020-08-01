@@ -1,6 +1,27 @@
-# Ozone_Prueba
+# Python converter
 
-Para probar ejecutar `python __intit__.py` y se encuentra en `localhost:5000`
+### Requirements
 
-Los archivos puedes ser subidos desde cualquier parte de la computadora, son guardados en `upload_archives` y luego son convertidos a `converted_files` soporta gltf -> glb y obj -> glb
+1. Yarn
+2. Python
+3. pip
+
+
+### Steps
+
+1. First execute in your terminal for install dependencies
+
+````
+yarn install-dependencies
+````
+
+2. Second execute in your terminal
+
+````
+yarn start
+````
+3. Open your browser in  `localhost:5000`
+
+The files upload are saved in `upload_files` and later move and converted into `converted_files` 
+Convert gltf -> glb and obj -> glb
 

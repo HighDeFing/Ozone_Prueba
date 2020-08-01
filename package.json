@@ -1,0 +1,12 @@
+{
+  "name": "python-converter",
+  "version": "1.0.0",
+  "description": "python converter model 3d in GLB",
+  "main": "converter.js",
+  "scripts": {
+    "start": "python __init__.py",
+    "install-dependencies": "pip install pygltflib && pip install werkzeug && pip install flask"
+  },
+  "author": "",
+  "license": "ISC"
+}

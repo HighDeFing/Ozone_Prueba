@@ -6,7 +6,7 @@ import ntpath
 from converter import gtlf2glb_call, obj2glb_call
 
 
-UPLOAD_FOLDER = 'upload_archives'  #folder of the uploads
+UPLOAD_FOLDER = 'upload_files'  #folder of the uploads
 ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}  #allowed_extensions still not aplicable
 CONVERTED_FOLDER = 'converted_files'  #folder of the converted files
 USER = 'generic_user' #user attribute and the name of the folder

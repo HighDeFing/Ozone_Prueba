@@ -1,101 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}" />
+	<meta charset="UTF-8">
+	<title>Home</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}" />
 
 
 </head>
+
 <body class="is-preload">
-     <!-- Header -->
-		<header id="header">
-        <a class="logo" href="upload.html">Home</a>
-				<nav>
-					<a href="#menu">Menu</a>
-				</nav>
-			</header>
+	<!-- Header -->
+	<header id="header">
+		<a class="logo" href="upload.html">Home</a>
+		<nav>
+			<a href="#menu">Menu</a>
+		</nav>
+	</header>
 
-		<!-- Nav -->
-			<nav id="menu">
-				<ul class="links">
-					<li><a href="home.html">Home</a></li>
-				</ul>
-			</nav>
-<div id="heading">
-    <h1>Upload</h1>
-<!--    <img src="{{ url_for('static',filename='images/banner.png') }}">-->
-</div>
-<section id="main" class="wrapper">
-<div class="inner">
-    <div class="content">
-        <div class="col-6 col-12-medium">
+	<!-- Nav -->
+	<nav id="menu">
+		<ul class="links">
+			<li><a href="home.html">Home</a></li>
+		</ul>
+	</nav>
+	<div id="heading">
+		<h1>Upload</h1>
+		<!--    <img src="{{ url_for('static',filename='images/banner.png') }}">-->
+	</div>
+	<section id="main" class="wrapper">
+		<div class="inner">
+			<div class="content">
+				<div class="col-6 col-12-medium">
 
-			<h3>Form</h3>
-									<form method="post" action = "http://localhost:5000/uploader" enctype = "multipart/form-data">
-										<div class="row gtr-uniform">
-											<!-- Break -->
-											<div class="col-12">
-												<select name="category" id="category">
-													<option value="">- Select -</option>
-													<option value="gltf">.gltf</option>
-													<option value="obj">.obj</option>
-													<option value="fbx">.fbx</option>
-												</select>
-											</div>
-											<div class="col-12">
-												<ul class="actions">
-													<input type="file" id="file" name="file" multiple  webkitdirectory>
-													<li><input type = "submit"/></li>
-												</ul>
-											</div>
-										</div>
-									</form>
+					<h3>Form</h3>
+					<form method="post" action="http://localhost:5000/uploader" enctype="multipart/form-data">
+						<div class="row gtr-uniform">
+							<!-- Break -->
+							<div class="col-12">
+								<select name="category" id="category">
+									<option value="">- Select -</option>
+									<option value="gltf">.gltf</option>
+									<option value="obj">.obj</option>
+									<option value="fbx">.fbx</option>
+								</select>
+							</div>
+							<div class="col-12">
+								<ul class="actions">
+									<input type="file" id="file" name="file" multiple webkitdirectory>
+									<li><input type="submit" /></li>
+								</ul>
+							</div>
+						</div>
+					</form>
 
-        </div>
-    </div>
-</div>
-</section>
-
-     <!-- Footer -->
-			<footer id="footer">
-				<div class="inner">
-					<div class="content">
-                        <section>
-                            <h3>Life ain't easy</h3>
-                            <p>But this is it.</p>
-                            </section>
-                        <section>
-                            <h4>Realizado por</h4>
-							<ul class="alt">
-								<li><a href="#">Heider Delgado</a></li>
-							</ul>
-                            </section>
-                        <section>
-							<h4>Fuentes</h4>
-							<ul class="plain">
-								<li><a href="https://github.com/HighDeFing/ABDProyecto1"><i class="icon fa-github">&nbsp;</i>Github</a></li>
-							</ul>
-						</section>
-					</div>
-					<div class="copyright">
-						&copy; Untitled. Photos <a href="https://unsplash.co">Unsplash</a>, Video <a href="https://coverr.co">Coverr</a>.
-					</div>
 				</div>
-			</footer>
-<!-- Button script -->
+			</div>
+		</div>
+	</section>
 
-<!-- Button script -->
+	<!-- Footer -->
+	<footer id="footer">
+		<div class="inner">
+			<div class="content">
+				<section>
+					<h3>Life ain't easy</h3>
+					<p>But this is it.</p>
+				</section>
+				<section>
+					<h4>Realizado por</h4>
+					<ul class="alt">
+						<li><a href="#">Heider Delgado</a></li>
+					</ul>
+				</section>
+				<section>
+					<h4>Fuentes</h4>
+					<ul class="plain">
+						<li><a href="https://github.com/HighDeFing/ABDProyecto1"><i
+									class="icon fa-github">&nbsp;</i>Github</a></li>
+					</ul>
+				</section>
+			</div>
+			<div class="copyright">
+				&copy; Untitled. Photos <a href="https://unsplash.co">Unsplash</a>, Video <a
+					href="https://coverr.co">Coverr</a>.
+			</div>
+		</div>
+	</footer>
+	<!-- Button script -->
 
-<!-- Assest script -->
-<script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
-<script src="{{ url_for('static',filename='assets/js/browser.min.js') }}"></script>
-<script src="{{ url_for('static',filename='assets/js/breakpoints.min.js') }}"></script>
-<script src="{{ url_for('static',filename='assets/js/util.js') }}"></script>
-<script src="{{ url_for('static',filename='assets/js/main.js') }}"></script>
-<!-- Assest script -->
+	<!-- Button script -->
+
+	<!-- Assest script -->
+	<script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='assets/js/browser.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='assets/js/breakpoints.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='assets/js/util.js') }}"></script>
+	<script src="{{ url_for('static',filename='assets/js/main.js') }}"></script>
+	<!-- Assest script -->
 
 
 </body>
+
 </html>
