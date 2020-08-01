@@ -1,6 +1,5 @@
 # Python converter
 
-<<<<<<< HEAD
 ### Requirements
 
 1. Yarn
