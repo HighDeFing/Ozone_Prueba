@@ -3,13 +3,75 @@ from werkzeug.utils import secure_filename
 import os
 import shutil
 import ntpath
+import sys
 from converter import gtlf2glb_call, obj2glb_call
 
 
 UPLOAD_FOLDER = 'upload_files'  #folder of the uploads
 ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}  #allowed_extensions still not aplicable
 CONVERTED_FOLDER = 'converted_files'  #folder of the converted files
-USER = 'generic_user' #user attribute and the name of the folder
+USER = 'generic_user_5' #user attribute and the name of the folder
+UPLOAD_ID = "some_id" #this attribute is to differentiate between user uploads.
+
+
+class upload_file_class:
+
+    def __init__(self, files, type, user, upload_id):
+        """
+        :param file: A file type
+        :param type: type of 3D object
+        :param user: user_id
+        :param upload_id: id of the upload used to differentiate between user uploads.
+        """
+        self.files = files
+        self.type = type
+        self.user = user
+        self.upload_id = upload_id
+        self.source_file_path = ""
+        self.source_file_name = ""
+
+    def save_file(self, save_folder):
+        folder2create = self.user + self.upload_id
+        path = os.path.join(save_folder, folder2create, self.type)
+        if os.path.exists(path):  # creates a folder with user_id and replaces if it already exist
+            shutil.rmtree(path)
+        os.makedirs(path)
+        print("path_folder_created", path, file=sys.stderr)
+        for f in self.files:
+            file_name = secure_filename(self.path_leaf(f.filename))
+            # print("converted_path", file_name, file=sys.stderr)
+            file_path = os.path.join(path, file_name)
+            if file_name.endswith('.gltf'):
+                self.source_file_path = file_path
+                self.source_file_name = os.path.splitext(file_name)[0]  # split text gets us the name without the extension
+            if file_name.endswith('.obj'):
+                self.source_file_path = file_path
+                self.source_file_name = os.path.splitext(file_name)[0]  # split text gets us the name without the extension
+            f.save(file_path)
+        print(self.files, file=sys.stderr)
+        return
+
+    def convert_file(self, converted_folder):
+        converted_path = os.path.join(converted_folder, self.user)  # Path of the converted folder and the user for that folder
+        if os.path.exists(converted_path):  # creates a folder with user_id and replaces if it already exist
+            shutil.rmtree(converted_path)
+        os.makedirs(converted_path)
+        if self.type == 'gltf':
+            destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
+            gtlf2glb_call(self.source_file_path, destination_path)  # call to the converter
+        if self.type == 'obj':
+            destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
+            obj2glb_call(self.source_file_path, destination_path)  # call to the converter
+        return
+
+    def path_leaf(self, path):
+        """
+        :param path: Recives a path with a lot of '/'
+        :return: Returns the only the name of the file without '/'
+        """
+        head, tail = ntpath.split(path)
+        return tail or ntpath.basename(head)
+
 
 app = Flask(__name__)
 
@@ -33,54 +95,12 @@ def upload_file():
         type = request.form.get('category') #get the file type from the html
         #print(category, file=sys.stderr)
         user = USER
-        create_folder(files, user, type) #call the function to create the folder with the user name
+        upload_id = UPLOAD_ID
+        my_upload = upload_file_class(files, type, user, upload_id)
+        my_upload.save_file(app.config['UPLOAD_FOLDER'])
+        my_upload.convert_file(CONVERTED_FOLDER)
+        # create_folder(files, user, type) #call the function to create the folder with the user name
         return 'file uploaded successfully'
-
-
-def create_folder(files, user, type):
-    """
-    :param files: Recibes a file.type form request.files.getlist() this is a method from multiple  webkitdirectory
-    :param user: user name
-    :param type: file archive type
-    :return: nothing
-
-    This fuction create a folder with the user param as name in upload_achives, and saves the files in it.
-    """
-    path = os.path.join(app.config['UPLOAD_FOLDER'], user, type)
-    if os.path.exists(path): #creates a folder with user_id and replaces if it already exist
-        shutil.rmtree(path)
-    os.makedirs(path)
-    for f in files:
-        file_name = secure_filename(path_leaf(f.filename))
-        #print("converted_path", file_name, file=sys.stderr)
-        file_path = os.path.join(path, file_name)
-        if file_name.endswith('.gltf'):
-            source_file_path = file_path
-            source_file_name = os.path.splitext(file_name)[0] #split text gets us the name without the extension
-        if file_name.endswith('.obj'):
-            source_file_path = file_path
-            source_file_name = os.path.splitext(file_name)[0] #split text gets us the name without the extension
-        f.save(file_path) #this saves the original file in the upload_files folder.
-    converted_path = os.path.join(CONVERTED_FOLDER, user)  # Path of the converted folder and the user for that folder
-    if os.path.exists(converted_path):  # creates a folder with user_id and replaces if it already exist
-        shutil.rmtree(converted_path)
-    os.makedirs(converted_path)
-    if type == 'gltf':
-        destination_path = converted_path + '/' + source_file_name + '.glb' #Name of the new glb file
-        gtlf2glb_call(source_file_path, destination_path) #call to the converter
-    if type == 'obj':
-        destination_path = converted_path + '/' + source_file_name + '.glb'  # Name of the new glb file
-        obj2glb_call(source_file_path, destination_path)  # call to the converter
-
-
-
-def path_leaf(path):
-    """
-    :param path: Recives a path with a lot of '/'
-    :return: Returns the only the name of the file without '/'
-    """
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
 
 
 def allowed_file(filename):

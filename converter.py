@@ -6,6 +6,7 @@ from pygltflib.utils import glb2gltf, gltf2glb
 
 path = 'converter.js'
 
+
 def gtlf2glb_call(file, destination):
     gltf2glb(file, destination=destination, override=True)
 
