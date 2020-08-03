@@ -5,8 +5,11 @@
   "main": "converter.js",
   "scripts": {
     "start": "python __init__.py",
-    "install-dependencies": "pip install pygltflib && pip install werkzeug && pip install flask"
+    "install-dependencies": "pip install pygltflib && pip install werkzeug && pip install flask && npm install obj2gltf"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "obj2gltf": "^3.1.0"
+  }
 }
