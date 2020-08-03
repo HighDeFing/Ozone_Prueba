@@ -37,9 +37,12 @@ class upload_file_class:
             shutil.rmtree(path)
         os.makedirs(path)
         print("path_folder_created", path, file=sys.stderr)
+        if self.type == 'obj':
+            texture_path = os.path.join(path, 'textures')
+            os.makedirs(texture_path)
         for f in self.files:
             file_name = secure_filename(self.path_leaf(f.filename))
-            # print("converted_path", file_name, file=sys.stderr)
+            #print("converted_path", file_name, file=sys.stderr)
             file_path = os.path.join(path, file_name)
             if file_name.endswith('.gltf'):
                 self.source_file_path = file_path
@@ -47,6 +50,9 @@ class upload_file_class:
             if file_name.endswith('.obj'):
                 self.source_file_path = file_path
                 self.source_file_name = os.path.splitext(file_name)[0]  # split text gets us the name without the extension
+            if self.type == 'obj' and (file_name.endswith('.jpg') or file_name.endswith('.png')):
+                f.save(os.path.join(texture_path, file_name))
+                continue #saves files in texture folder in upload of jpg and png textures
             f.save(file_path)
         print(self.files, file=sys.stderr)
         return
