@@ -3,7 +3,7 @@ npm install obj2gltf
 */
 
 var myArgs = process.argv.slice(2);
-//console.log('myArgs: ', myArgs);
+console.log('myArgs: ', myArgs);
 
 obj_name = myArgs[0]
 glb_name = myArgs[1]

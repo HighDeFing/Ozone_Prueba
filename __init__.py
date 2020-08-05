@@ -10,7 +10,7 @@ from converter import gtlf2glb_call, obj2glb_call
 UPLOAD_FOLDER = 'upload_files'  #folder of the uploads
 ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}  #allowed_extensions still not aplicable
 CONVERTED_FOLDER = 'converted_files'  #folder of the converted files
-USER = 'generic_user_5' #user attribute and the name of the folder
+USER = 'generic_user_6' #user attribute and the name of the folder
 UPLOAD_ID = "some_id" #this attribute is to differentiate between user uploads.
 
 
@@ -36,11 +36,17 @@ class upload_file_class:
         if os.path.exists(path):  # creates a folder with user_id and replaces if it already exist
             shutil.rmtree(path)
         os.makedirs(path)
-        print("path_folder_created", path, file=sys.stderr)
+        #print("path_folder_created", path, file=sys.stderr)
         if self.type == 'obj':
             texture_path = os.path.join(path, 'textures')
             os.makedirs(texture_path)
         for f in self.files:
+            if self.type == 'gltf' and (f.filename.endswith('.jpg') or f.filename.endswith('.png')):
+                file_name = self.path_leaf(f.filename)
+                file_path = os.path.join(path, file_name)
+                f.save(file_path)
+                # sometime gltf might have weird names in the texture files, since we can't change the gltf we accept the file name without secure_filename
+                continue
             file_name = secure_filename(self.path_leaf(f.filename))
             #print("converted_path", file_name, file=sys.stderr)
             file_path = os.path.join(path, file_name)
@@ -54,7 +60,6 @@ class upload_file_class:
                 f.save(os.path.join(texture_path, file_name))
                 continue #saves files in texture folder in upload of jpg and png textures
             f.save(file_path)
-        print(self.files, file=sys.stderr)
         return
 
     def convert_file(self, converted_folder):
@@ -63,7 +68,9 @@ class upload_file_class:
             shutil.rmtree(converted_path)
         os.makedirs(converted_path)
         if self.type == 'gltf':
-            destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
+            destination_path = converted_path + '\\' + self.source_file_name + '.glb'  # Name of the new glb file
+            print("self.source_file_path", self.source_file_path, file=sys.stderr)
+            print("destination_path", destination_path, file=sys.stderr)
             gtlf2glb_call(self.source_file_path, destination_path)  # call to the converter
         if self.type == 'obj':
             destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
