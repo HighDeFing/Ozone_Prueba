@@ -5,7 +5,7 @@
   "main": "converter.js",
   "scripts": {
     "start": "python __init__.py",
-    "install-dependencies": "pip install pygltflib && pip install werkzeug && pip install flask"
+    "install-dependencies": "pip install pygltflib && pip install werkzeug && pip install flask && yarn"
   },
   "author": "",
   "license": "ISC",
