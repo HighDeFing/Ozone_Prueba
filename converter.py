@@ -8,8 +8,9 @@ from pygltflib.utils import ImageFormat, Image
 
 FILE_NAME = "test_files/Spiral_GLTF/Untitled.gltf"
 DESTINATION = "model.glb"
-path = 'converter.js'
+path_obj = 'obj_glb.js'
 path_gltf = 'gltf_glb.js'
+path_fbx = 'fbx_glb.js'
 
 
 def gtlf2glb_call(file, destination):
@@ -17,7 +18,11 @@ def gtlf2glb_call(file, destination):
 
 
 def obj2glb_call(file, destination):
-    call(["node", path, file, destination])
+    call(["node", path_obj, file, destination])
+
+
+def fbx2glb_call(file, destination):
+    call(["node", path_fbx, file, destination])
 
 
 

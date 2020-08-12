@@ -4,7 +4,7 @@ import os
 import shutil
 import ntpath
 import sys
-from converter import gtlf2glb_call, obj2glb_call
+from converter import gtlf2glb_call, obj2glb_call, fbx2glb_call
 
 
 UPLOAD_FOLDER = 'upload_files'  #folder of the uploads
@@ -50,6 +50,9 @@ class upload_file_class:
             file_name = secure_filename(self.path_leaf(f.filename))
             #print("converted_path", file_name, file=sys.stderr)
             file_path = os.path.join(path, file_name)
+            if file_name.endswith('.fbx'):
+                self.source_file_path = file_path
+                self.source_file_name = os.path.splitext(file_name)[0] # split text gets us the name without the extension
             if file_name.endswith('.gltf'):
                 self.source_file_path = file_path
                 self.source_file_name = os.path.splitext(file_name)[0]  # split text gets us the name without the extension
@@ -69,12 +72,15 @@ class upload_file_class:
         os.makedirs(converted_path)
         if self.type == 'gltf':
             destination_path = converted_path + '\\' + self.source_file_name + '.glb'  # Name of the new glb file
-            print("self.source_file_path", self.source_file_path, file=sys.stderr)
-            print("destination_path", destination_path, file=sys.stderr)
+            #print("self.source_file_path", self.source_file_path, file=sys.stderr)
+            #print("destination_path", destination_path, file=sys.stderr)
             gtlf2glb_call(self.source_file_path, destination_path)  # call to the converter
         if self.type == 'obj':
             destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
             obj2glb_call(self.source_file_path, destination_path)  # call to the converter
+        if self.type == 'fbx':
+            destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
+            fbx2glb_call(self.source_file_path, destination_path)  # call to the converter
         return
 
     def path_leaf(self, path):

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fbx2gltf": "^0.9.7-p1",
     "gltf-pipeline": "^3.0.0",
     "obj2gltf": "^3.1.0"
   }
