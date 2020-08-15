@@ -3,7 +3,7 @@ npm install fbx2gltf
 */
 
 var myArgs = process.argv.slice(2);
-console.log('myArgs: ', myArgs);
+//console.log('myArgs: ', myArgs);
 
 fbx_name = myArgs[0]
 glb_name = myArgs[1]
