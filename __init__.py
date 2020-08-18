@@ -121,12 +121,24 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #when you do f.save this is where it
 
 
 @app.route('/')
-@app.route('/upload.html', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_render():
     """
     Method for rendering upload.html
     :return:
     """
+    if request.method == 'POST':
+        #files = request.files.getlist('file') #get the files in a File object
+        type = request.form.get('category') #get the file type from the html
+        #print(category, file=sys.stderr)
+        file = request.files['file']
+        user = USER
+        upload_id = UPLOAD_ID
+        my_upload = upload_file_class(file, type, user, upload_id)
+        my_upload.save_file_zip(app.config['UPLOAD_FOLDER'])
+        #my_upload.save_file(app.config['UPLOAD_FOLDER'])
+        my_upload.convert_file(CONVERTED_FOLDER)
+        # create_folder(files, user, type) #call the function to create the folder with the user name
     return render_template('upload.html')
 
 
