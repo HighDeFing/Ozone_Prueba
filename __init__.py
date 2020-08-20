@@ -20,19 +20,25 @@ class upload_file_class:
 
     def __init__(self, files, type, user, upload_id):
         """
-        :param file: A file type
-        :param type: type of 3D object
-        :param user: user_id
+        :param file: A file type.
+        :param type: type of 3D object.
+        :param user: user_id.
         :param upload_id: id of the upload used to differentiate between user uploads.
         """
         self.files = files
         self.type = type
         self.user = user
         self.upload_id = upload_id
-        self.source_file_path = ""
-        self.source_file_name = ""
+        self.source_file_path = "" #The source path.
+        self.source_file_name = "" #The source only name of the glft, fbx, obj file.
+        self.glb_path = "" #path of the glb final file.
 
     def save_file(self, save_folder):
+        """
+        :param save_folder: the path of the save folder
+        :return:
+        This method functions with normal folders
+        """
         folder2create = self.user + self.upload_id
         path = os.path.join(save_folder, folder2create, self.type)
         if os.path.exists(path):  # creates a folder with user_id and replaces if it already exist
@@ -68,6 +74,11 @@ class upload_file_class:
         return
 
     def save_file_zip(self, save_folder):
+        """
+        :param save_folder: the path of the save folder
+        :return:
+        This method functions with with zip folders
+        """
         folder2create = self.user + self.upload_id
         path = os.path.join(save_folder, folder2create, self.type)
         if os.path.exists(path):  # creates a folder with user_id and replaces if it already exist
@@ -111,6 +122,7 @@ class upload_file_class:
         if self.type == 'fbx':
             destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
             fbx2glb_call(self.source_file_path, destination_path)  # call to the converter
+        self.glb_path = destination_path
         return
 
 
