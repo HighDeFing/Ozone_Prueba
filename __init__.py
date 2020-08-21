@@ -1,4 +1,4 @@
-from flask import Flask, escape, request, redirect, render_template, flash, url_for
+from flask import Flask, escape, request, redirect, render_template, flash, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 import shutil
@@ -14,6 +14,7 @@ ALLOWED_EXTENSIONS = {'gltf', 'glb', 'obj'}  #allowed_extensions still not aplic
 CONVERTED_FOLDER = 'converted_files'  #folder of the converted files
 USER = 'generic_user_6' #user attribute and the name of the folder
 UPLOAD_ID = "some_id" #this attribute is to differentiate between user uploads.
+
 
 
 class upload_file_class:
@@ -130,9 +131,13 @@ class upload_file_class:
 app = Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #when you do f.save this is where it ends.
-
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/')
+def index():
+    return render_template('gallery.html')
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_render():
     """
@@ -150,9 +155,19 @@ def upload_render():
         my_upload.save_file_zip(app.config['UPLOAD_FOLDER'])
         #my_upload.save_file(app.config['UPLOAD_FOLDER'])
         my_upload.convert_file(CONVERTED_FOLDER)
-        print(my_upload.glb_path, file=sys.stderr)
         # create_folder(files, user, type) #call the function to create the folder with the user name
-    return render_template('upload.html')
+    aux = os.path.join(CONVERTED_FOLDER, USER)
+    complete_path = os.path.join(aux, os.listdir(aux)[0])
+    filename = os.listdir(aux)[0]
+    print(complete_path, file=sys.stderr)
+    return redirect(url_for('foo', complete_path=complete_path))
+
+
+@app.route('/<path:complete_path>')
+def foo(complete_path):
+    aux = os.path.join(CONVERTED_FOLDER, USER)
+    filename = os.listdir(aux)[0]
+    #return send_from_directory(aux, filename, as_attachment=True) #This is for download
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
