@@ -167,7 +167,8 @@ def upload_render():
 def foo(complete_path):
     aux = os.path.join(CONVERTED_FOLDER, USER)
     filename = os.listdir(aux)[0]
-    #return send_from_directory(aux, filename, as_attachment=True) #This is for download
+    return 'this is the file {}'.format(filename)
+    #return send_from_directory(aux, filename, as_attachment=True) #This is for download the file
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
