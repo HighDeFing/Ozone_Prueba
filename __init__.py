@@ -150,6 +150,7 @@ def upload_render():
         my_upload.save_file_zip(app.config['UPLOAD_FOLDER'])
         #my_upload.save_file(app.config['UPLOAD_FOLDER'])
         my_upload.convert_file(CONVERTED_FOLDER)
+        print(my_upload.glb_path, file=sys.stderr)
         # create_folder(files, user, type) #call the function to create the folder with the user name
     return render_template('upload.html')
 
