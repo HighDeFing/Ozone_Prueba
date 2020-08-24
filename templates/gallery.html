@@ -36,26 +36,12 @@
 		<div class="inner">
 			<div class="content">
 				<div class="col-6 col-12-medium">
-
-                    <div class="header">
-                        <h1> Galeria de archivos </h1>
-                    </div>
-
-                    <div class="Cuadro">
-                        <div class="subtitulo">
-                            <h2>Tus Archivos</h2>
-                        </div>
-                        <div class="usuarios">
-                            {% for file_name in archivos %}
-                            <p> {{ file_name }}</p>
-                            <div class="columns">
-                                <div class="col-2">
-                                    <button href= '#' class="user_button"> Download </button>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+					<p> This {{ user }} has this file:</p>
+					<p> {{ complete_path }}</p>
+					<form action="{{ url_for('foo', complete_path=complete_path) }}" method="post"> <!-- or method="post" -->
+        				<input type="submit" value="Download" >
+    				</form>
+					
 
 				</div>
 			</div>
@@ -93,17 +79,6 @@
 	<!-- Button script -->
 
 	<!-- Button script -->
-	<script>
-		Dropzone.autoDiscover = false;
-
-		$(function() {
-		  var myDropzone = new Dropzone("#my-dropzone");
-		  myDropzone.on("queuecomplete", function(file) {
-			// Called when all files in the queue finish uploading.
-			window.location = "{{ url_for('upload_handle') }}";
-		  });
-		})
-	</script>
 
 	<!-- Assest script -->
 	<script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>

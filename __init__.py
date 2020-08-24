@@ -172,12 +172,15 @@ def upload_handle():
 @app.route('/gallery.html')
 @app.route('/gallery', methods=['GET', 'POST'])
 def gallery():
-    dirs =os.listdir(os.getcwd()+'\\converted_files')
-    return render_template('gallery.html', archivos=dirs)
+    dirs = os.listdir(os.getcwd()+'\\converted_files')
+    aux = os.path.join(CONVERTED_FOLDER, USER, UPLOAD_ID)
+    complete_path = os.path.join(aux, os.listdir(aux)[0])
+    return render_template('gallery.html', archivos=dirs, user=USER, complete_path=complete_path)
 
-@app.route('/<path:complete_path>')
+
+@app.route('/<path:complete_path>', methods=['GET', 'POST'])
 def foo(complete_path):
-    aux = os.path.join(CONVERTED_FOLDER, USER)
+    aux = os.path.join(CONVERTED_FOLDER, USER, UPLOAD_ID)
     filename = os.listdir(aux)[0]
     return 'this is the file {}'.format(filename)
     #return send_from_directory(aux, filename, as_attachment=True) #This is for download the file
