@@ -1,4 +1,4 @@
-from flask import Flask, escape, request, redirect, render_template, flash, url_for
+from flask import Flask, escape, request, redirect, render_template, flash, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 import shutil
@@ -16,23 +16,30 @@ USER = 'generic_user_6' #user attribute and the name of the folder
 UPLOAD_ID = "some_id" #this attribute is to differentiate between user uploads.
 
 
+
 class upload_file_class:
 
     def __init__(self, files, type, user, upload_id):
         """
-        :param file: A file type
-        :param type: type of 3D object
-        :param user: user_id
+        :param file: A file type.
+        :param type: type of 3D object.
+        :param user: user_id.
         :param upload_id: id of the upload used to differentiate between user uploads.
         """
         self.files = files
         self.type = type
         self.user = user
         self.upload_id = upload_id
-        self.source_file_path = ""
-        self.source_file_name = ""
+        self.source_file_path = "" #The source path.
+        self.source_file_name = "" #The source only name of the glft, fbx, obj file.
+        self.glb_path = "" #path of the glb final file.
 
     def save_file(self, save_folder):
+        """
+        :param save_folder: the path of the save folder
+        :return:
+        This method functions with normal folders
+        """
         folder2create = self.user + self.upload_id
         path = os.path.join(save_folder, folder2create, self.type)
         if os.path.exists(path):  # creates a folder with user_id and replaces if it already exist
@@ -68,6 +75,11 @@ class upload_file_class:
         return
 
     def save_file_zip(self, save_folder):
+        """
+        :param save_folder: the path of the save folder
+        :return:
+        This method functions with with zip folders
+        """
         folder2create = self.user + self.upload_id
         path = os.path.join(save_folder, folder2create, self.type)
         if os.path.exists(path):  # creates a folder with user_id and replaces if it already exist
@@ -111,6 +123,7 @@ class upload_file_class:
         if self.type == 'fbx':
             destination_path = converted_path + '/' + self.source_file_name + '.glb'  # Name of the new glb file
             fbx2glb_call(self.source_file_path, destination_path)  # call to the converter
+        self.glb_path = destination_path
         return
 
 
@@ -118,16 +131,44 @@ class upload_file_class:
 app = Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #when you do f.save this is where it ends.
-
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/')
-@app.route('/upload.html', methods=['GET', 'POST'])
+def index():
+    return render_template('gallery.html')
+
+
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_render():
     """
     Method for rendering upload.html
     :return:
     """
-    return render_template('upload.html')
+    if request.method == 'POST':
+        #files = request.files.getlist('file') #get the files in a File object
+        type = request.form.get('category') #get the file type from the html
+        #print(category, file=sys.stderr)
+        file = request.files['file']
+        user = USER
+        upload_id = UPLOAD_ID
+        my_upload = upload_file_class(file, type, user, upload_id)
+        my_upload.save_file_zip(app.config['UPLOAD_FOLDER'])
+        #my_upload.save_file(app.config['UPLOAD_FOLDER'])
+        my_upload.convert_file(CONVERTED_FOLDER)
+        # create_folder(files, user, type) #call the function to create the folder with the user name
+    aux = os.path.join(CONVERTED_FOLDER, USER)
+    complete_path = os.path.join(aux, os.listdir(aux)[0])
+    filename = os.listdir(aux)[0]
+    print(complete_path, file=sys.stderr)
+    return redirect(url_for('foo', complete_path=complete_path))
+
+
+@app.route('/<path:complete_path>')
+def foo(complete_path):
+    aux = os.path.join(CONVERTED_FOLDER, USER)
+    filename = os.listdir(aux)[0]
+    return 'this is the file {}'.format(filename)
+    #return send_from_directory(aux, filename, as_attachment=True) #This is for download the file
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
