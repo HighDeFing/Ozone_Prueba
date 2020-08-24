@@ -29,7 +29,7 @@
 		</ul>
 	</nav>
 	<div id="heading">
-		<h1>Upload</h1>
+		<h1>Files Gallery</h1>
 		<!--    <img src="{{ url_for('static',filename='images/banner.png') }}">-->
 	</div>
 	<section id="main" class="wrapper">
@@ -41,7 +41,27 @@
 					<form action="{{ url_for('foo', complete_path=complete_path) }}" method="post"> <!-- or method="post" -->
         				<input type="submit" value="Download" >
     				</form>
-					
+
+
+                    <!--<div class="header">
+                        <h1> Galeria de archivos </h1>
+                    </div>-->
+
+                    <div class="Cuadro">
+                        <div class="subtitulo">
+                            <h2>Your Files</h2>
+                        </div>
+                        <div class="usuarios">
+                            {% for file_name in archivos %}
+                            <p> {{ file_name }}</p>
+                            <div class="columns">
+                                <div class="col-2">
+                                    <button href= '#' class="user_button"> Download </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
 				</div>
 			</div>
