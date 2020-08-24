@@ -134,6 +134,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #when you do f.save this is where it
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/')
+@app.route('/index.html')
 def index():
     """
     Method for rendering upload.html
@@ -160,13 +161,19 @@ def upload_handle():
         #my_upload.save_file(app.config['UPLOAD_FOLDER'])
         my_upload.convert_file(CONVERTED_FOLDER)
         # create_folder(files, user, type) #call the function to create the folder with the user name
-    aux = os.path.join(CONVERTED_FOLDER, USER)
+    aux = os.path.join(CONVERTED_FOLDER, USER, UPLOAD_ID)
     complete_path = os.path.join(aux, os.listdir(aux)[0])
     filename = os.listdir(aux)[0]
     print(complete_path, file=sys.stderr)
-    return render_template('index.html')
     #return redirect(url_for('foo', complete_path=complete_path))
+    return redirect(url_for('gallery'))
 
+
+@app.route('/gallery.html')
+@app.route('/gallery', methods=['GET', 'POST'])
+def gallery():
+    dirs =os.listdir(os.getcwd()+'\\converted_files')
+    return render_template('gallery.html', archivos=dirs)
 
 @app.route('/<path:complete_path>')
 def foo(complete_path):
@@ -176,26 +183,26 @@ def foo(complete_path):
     #return send_from_directory(aux, filename, as_attachment=True) #This is for download the file
 
 
-@app.route('/uploader', methods=['GET', 'POST'])
-def upload_file():
-    """
-    Method for handling the upload
-    :return: nothing
-    """
-    if request.method == 'POST':
-        #files = request.files.getlist('file') #get the files in a File object
-        type = request.form.get('category') #get the file type from the html
-        #print(category, file=sys.stderr)
-        file = request.files['file']
-        user = USER
-        upload_id = UPLOAD_ID
-        my_upload = upload_file_class(file, type, user, upload_id)
-        my_upload.save_file_zip(app.config['UPLOAD_FOLDER'])
-        #my_upload.save_file(app.config['UPLOAD_FOLDER'])
-        my_upload.convert_file(CONVERTED_FOLDER)
-        # create_folder(files, user, type) #call the function to create the folder with the user name
-        return 'file uploaded successfully'
-
+# @app.route('/uploader', methods=['GET', 'POST'])
+# def upload_file():
+#     """
+#     Method for handling the upload
+#     :return: nothing
+#     """
+#     if request.method == 'POST':
+#         #files = request.files.getlist('file') #get the files in a File object
+#         type = request.form.get('category') #get the file type from the html
+#         #print(category, file=sys.stderr)
+#         file = request.files['file']
+#         user = USER
+#         upload_id = UPLOAD_ID
+#         my_upload = upload_file_class(file, type, user, upload_id)
+#         my_upload.save_file_zip(app.config['UPLOAD_FOLDER'])
+#         #my_upload.save_file(app.config['UPLOAD_FOLDER'])
+#         my_upload.convert_file(CONVERTED_FOLDER)
+#         # create_folder(files, user, type) #call the function to create the folder with the user name
+#         return 'file uploaded successfully'
+#
 
 def allowed_file(filename):
     return '.' in filename and \
