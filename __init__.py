@@ -108,7 +108,7 @@ class upload_file_class:
         #print(self.source_file_name, file=sys.stderr)
 
     def convert_file(self, converted_folder):
-        converted_path = os.path.join(converted_folder, self.user)  # Path of the converted folder and the user for that folder
+        converted_path = os.path.join(converted_folder, self.user, self.upload_id)  # Path of the converted folder and the user for that folder with id of the folder
         if os.path.exists(converted_path):  # creates a folder with user_id and replaces if it already exist
             shutil.rmtree(converted_path)
         os.makedirs(converted_path)
@@ -135,13 +135,17 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/')
 def index():
-    return render_template('gallery.html')
+    """
+    Method for rendering upload.html
+    :return:
+    """
+    return render_template('index.html')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
-def upload_render():
+def upload_handle():
     """
-    Method for rendering upload.html
+    Method to handle the upload
     :return:
     """
     if request.method == 'POST':
@@ -160,7 +164,8 @@ def upload_render():
     complete_path = os.path.join(aux, os.listdir(aux)[0])
     filename = os.listdir(aux)[0]
     print(complete_path, file=sys.stderr)
-    return redirect(url_for('foo', complete_path=complete_path))
+    return render_template('index.html')
+    #return redirect(url_for('foo', complete_path=complete_path))
 
 
 @app.route('/<path:complete_path>')
