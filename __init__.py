@@ -170,6 +170,10 @@ def foo(complete_path):
     return 'this is the file {}'.format(filename)
     #return send_from_directory(aux, filename, as_attachment=True) #This is for download the file
 
+@app.route('/gallery', methods=['GET', 'POST'])
+def gallery():
+    dirs =os.listdir(os.getcwd()+'\\converted_files')
+    return render_template('galeria.html', archivos=dirs)
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
