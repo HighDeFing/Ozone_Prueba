@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href ="static/assets/css/Estilos.css">
+    <title>Gallery</title>
+</head>
+<body>
+    <div class="header">
+        <h1> Files Gallery </h1>
+    </div>
+    
+    <div class="Cuadro">
+        <div class="subtitulo">
+            <h2>Your Files</h2>
+        </div>
+        <div class="usuarios">
+            {% for file_name in archivos %}
+            <p> {{ file_name }}</p>
+            <div class="columns">
+                <div class="col-2">
+                    <button href= '#' class="user_button"> Download </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
