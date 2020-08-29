@@ -29,34 +29,27 @@
 		</ul>
 	</nav>
 	<div id="heading">
-		<h1>Files Gallery</h1>
+		<h1>Upload</h1>
 		<!--    <img src="{{ url_for('static',filename='images/banner.png') }}">-->
 	</div>
 	<section id="main" class="wrapper">
 		<div class="inner">
 			<div class="content">
 				<div class="col-6 col-12-medium">
-					<p> This {{ user }} has this file:</p>
-					<p> {{ complete_path }}</p>
-					<form action="{{ url_for('foo', complete_path=complete_path) }}" method="post"> <!-- or method="post" -->
-        				<input type="submit" value="Download" >
-    				</form>
 
-                    <div class="Cuadro">
-                        <div class="subtitulo">
-                            <h2>Your Files</h2>
-                        </div>
-                        <div class="usuarios">
-                            {% for file_name in archivos %}
-                            <p> {{ file_name }}</p>
-                            <div class="columns">
-                                <div class="col-2">
-                                    <button href= '#' class="user_button"> Download </button>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+					<form method="post" action="{{ url_for('upload_handle') }}" id="my-dropzone" class="dropzone" enctype="multipart/form-data">
+						<div class="row gtr-uniform">
+							<!-- Break -->
+							<div class="col-12">
+								<select name="category" id="category">
+									<option value="">- Select -</option>
+									<option value="gltf">.gltf</option>
+									<option value="obj">.obj</option>
+									<option value="fbx">.fbx</option>
+								</select>
+							</div>
+						</div>
+					</form>
 
 				</div>
 			</div>
@@ -91,8 +84,20 @@
 			</div>
 		</div>
 	</footer>
-	<!-- Button script -->
 
+	<!-- Button script -->
+	<!-- This script redirects after upload-->
+	<script>
+		Dropzone.autoDiscover = false;
+
+		$(function() {
+		  var myDropzone = new Dropzone("#my-dropzone");
+		  myDropzone.on("queuecomplete", function(file) {
+			// Called when all files in the queue finish uploading.
+			window.location = "{{ url_for('upload_handle') }}";
+		  });
+		})
+	</script>
 	<!-- Button script -->
 
 	<!-- Assest script -->
