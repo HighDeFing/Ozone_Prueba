@@ -182,7 +182,28 @@ def gallery():
 def foo(complete_path):
     aux = os.path.join(CONVERTED_FOLDER, USER, UPLOAD_ID)
     filename = os.listdir(aux)[0]
-    return 'this is the file {}'.format(filename)
+
+    if os.path.exists("downloaded_files") == True:
+            if len(os.listdir(os.getcwd()+'\\downloaded_files')) == 0:
+                print("empty folder")
+    else:
+        os.mkdir ("downloaded_files")
+
+    path_uploads= os.getcwd()+UPLOAD_FOLDER+'\\generic_user_6'
+    path_downloads = os.getcwd()+'\\downloaded_files'
+
+    my_file= open(path_uploads+'\\'+ filename,'r') 
+    zip_files(path_uploads+'\\'+ filename, os.path.basename(filename) )
+    my_file.close()
+
+    shutil.move("file.zip", rutaDescargas)                  #move to the download folder
+
+    my_file2 = open(path_downloads+ '\\'+ filename,'w')
+    extrac_files(path_downloads)
+    my_file2.close()
+    return render_template('message_successful.html', MyFile = filename)
+
+    #return 'this is the file {}'.format(filename)
     #return send_from_directory(aux, filename, as_attachment=True) #This is for download the file
 
 
@@ -215,6 +236,15 @@ def allowed_file(filename):
 def unzip_files(files, into):
     with ZipFile(files, 'r') as zipObj:  # extras the file
         zipObj.extractall(into)
+
+def zip_files(path,baseName):
+    myzip = ZipFile("file.zip",'w')
+    myzip.write (path, baseName) #search the folder downloaded_files
+    myzip.close()
+
+def extrac_files(path_file):
+    with ZipFile(path_file+'\\file.zip','r') as myzip:           #extrac files from the zip
+            myzip.extractall('downloaded_files')
 
 
 def path_leaf(path):
