@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
-from pygltflib import GLTF2
+#from pygltflib import GLTF2
 from subprocess import call
-from pygltflib.utils import glb2gltf, gltf2glb
+#from pygltflib.utils import glb2gltf, gltf2glb
 
-from pygltflib.utils import ImageFormat, Image
+#from pygltflib.utils import ImageFormat, Image
 
 FILE_NAME = "test_files/Spiral_GLTF/Untitled.gltf"
 DESTINATION = "model.glb"

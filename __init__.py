@@ -172,7 +172,7 @@ def upload_handle():
 @app.route('/gallery.html')
 @app.route('/gallery', methods=['GET', 'POST'])
 def gallery():
-    dirs = os.listdir(os.getcwd()+'\\converted_files')
+    dirs = os.listdir(os.getcwd()+'/converted_files')
     aux = os.path.join(CONVERTED_FOLDER, USER, UPLOAD_ID)
     complete_path = os.path.join(aux, os.listdir(aux)[0])
     return render_template('gallery.html', archivos=dirs, user=USER, complete_path=complete_path)
